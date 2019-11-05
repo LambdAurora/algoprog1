@@ -20,6 +20,7 @@ def move(hanoi, src, dst):
     hanoi[dst] = [b] + hanoi[dst]
     display_move(src, dst)
     print(hanoi)
+    return hanoi
 
 
 def is_move_valid(hanoi, src, dst):
@@ -38,12 +39,29 @@ def is_move_valid(hanoi, src, dst):
 
 
 def hanoi_move(hanoi, src, dst, blocks):
+    """
+    Moves a number of blocks from the source to the destination.
+    :param hanoi: The Hanoï towers.
+    :param src: The source tower.
+    :param dst: The destination tower.
+    :param blocks: The number of blocks to move.
+    :return:
+    """
     if blocks == 0:
         return hanoi
-    elif blocks == 1:
-        if is_move_valid(hanoi, 0, 1):
-            return move(hanoi, src, dst)
+    else:
+        third = third_tower(src, dst)
+        hanoi = hanoi_move(hanoi, src, third, blocks - 1)
+        if not is_move_valid(hanoi, src, dst):
+            return hanoi
+        hanoi = move(hanoi, src, dst)
+        hanoi = hanoi_move(hanoi, third, dst, blocks - 1)
         return hanoi
 
 
-move([[1, 2], [3], []], 0, 1)
+def hanoi_towers(hanoi, src, dst):
+    blocks = len(hanoi[src])
+    return hanoi_move(hanoi, src, dst, blocks)
+
+
+hanoi_towers([[1, 2, 3, 4, 5], [6], []], 0, 2)
